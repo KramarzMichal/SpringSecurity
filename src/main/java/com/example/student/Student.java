@@ -2,11 +2,11 @@ package com.example.student;
 
 public class Student {
     private final Integer studentId;
-    private String StudentName;
+    private String studentName;
 
     public Student(Integer studentId, String studentName) {
         this.studentId = studentId;
-        StudentName = studentName;
+        this.studentName = studentName;
     }
 
     public Integer getStudentId() {
@@ -14,6 +14,14 @@ public class Student {
     }
 
     public String getStudentName() {
-        return StudentName;
+        return studentName;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "studentId=" + studentId +
+                ", StudentName='" + studentName + '\'' +
+                '}';
     }
 }
