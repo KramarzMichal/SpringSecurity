@@ -11,6 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.util.concurrent.TimeUnit;
 
 import static com.example.security.ApplicationUserRole.*;
 
@@ -42,7 +45,28 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest() // określa, że dla każdego żądania ma być to co poniżej
                 .authenticated() // musi przejść autentykację (czyli klient musi podać login i hasło, które są w systemie)
                 .and()
-                .httpBasic();
+  //              .httpBasic();
+                .formLogin()
+                .loginPage("/login").permitAll()
+                .defaultSuccessUrl("/courses", true)
+                .passwordParameter("password") //jeśli chcemy użyć własnoego znacznika
+                .usernameParameter("username")
+                .and()
+                .rememberMe()
+                .tokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(21))
+                .key("alamakotaakotmaale") //klucz do szyfrowania za pomoca algorytmu MD5, koduje 'username' oraz 'validation time'
+                .rememberMeParameter("remember-me")
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                .clearAuthentication(true)
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID", "remember-me")
+                .logoutSuccessUrl("/login");
+
+
+
     }
 
     @Override
